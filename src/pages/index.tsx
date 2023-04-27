@@ -3,6 +3,9 @@ import Form from './Form'
 import Accordion from 'react-bootstrap/Accordion';
 import { Button } from 'react-bootstrap';
 import { useState } from 'react';
+import Spin from './spinners';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import Boom from './Tabs';
 
 
 function Show() {
@@ -39,6 +42,7 @@ function Show() {
 
 export default function Home() {
   const [items, setItems] = useState([])
+  const [num, setNum] = useState(0)
   const boom= (a:string, b:string)=> {
     if(a===b)
     return console.log('yes you are right');
@@ -46,14 +50,26 @@ export default function Home() {
   };
   
    const get = async ()=>{
+    setNum(20)
     let url:string = 'https://jsonplaceholder.typicode.com/todos/1';
+    setNum(30)
     let response = await fetch(url);
+    setNum(40)
     let data= await response.json()
-    if(!!data)
-    return setItems(data),console.log(data);
-    return console.log('not found ')
+    setNum(60)
+    if(!!data){
+      setNum(80)
+    return setItems(data),console.log(data),setNum(100), setTimeout(() => {
+      setNum(0)
+    }, 1000);}
+    else{
+      return console.log('not found '), setNum(100)
+    }
    }
    console.log(items);
+   function Data(){
+    return <ProgressBar animated now={num} />;
+  }
    
   return (
     <>
@@ -68,7 +84,11 @@ export default function Home() {
         <Show/>
         <Button variant='success' onClick={()=>boom('meri','meris')}>boom</Button>
         <Button variant='success' className='mx-2' onClick={get}>GEt</Button>
-        
+        <Data/>
+      </div>
+
+      <div className='container mt-2'>
+        <Boom/>
       </div>
     </>
   )
